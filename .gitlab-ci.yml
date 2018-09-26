@@ -1,23 +1,35 @@
 image: alpine:latest
 
+stages:
+  - container
+  - build
+  - test
+
 variables:
   DOCKER_DRIVER: overlay2
 
   KUBERNETES_VERSION: 1.8.6
   HELM_VERSION: 2.10.0
 
-  
 build:
   stage: build
+  image: alpine:node
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - build
+      - node_modules
+
+container:
+  stage: container
   image: docker:stable-git
   services:
   - docker:stable-dind
   script:
     - setup_docker
     - build
-  artifacts:
-    paths:
-      - build
 
 test:
   stage: test
