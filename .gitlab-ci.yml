@@ -1,5 +1,6 @@
+image: mhart/alpine-node
+
 build:
-  image: mhart/alpine-node
   stage: build
   script:
     - apk add --no-cache git
@@ -8,3 +9,11 @@ build:
     paths:
       - public
     expire_in: 1 day
+
+test:
+  stage: test
+  script:
+    - npm test
+  artifacts:
+    paths:
+      - coverage/coverage-final.json
