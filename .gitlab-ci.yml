@@ -16,7 +16,7 @@ build_container:
   services:
   - docker:stable-dind
   script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.i2p.online
     - echo "Building Dockerfile-based application..."
       docker build \
         --build-arg HTTP_PROXY="$HTTP_PROXY" \
