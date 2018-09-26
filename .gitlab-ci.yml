@@ -33,6 +33,7 @@ container:
 
 test:
   stage: test
+  image: mhart/alpine-node
   script:
     - npm install
     - npm test
