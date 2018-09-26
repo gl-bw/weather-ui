@@ -1,3 +1,5 @@
+image: alpine:latest
+
 stages:
   - container
   - build
@@ -7,18 +9,27 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-
-before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-
+  
 build_container:
-  image: docker:stable
-  services:
-    - docker:dind
   stage: container
+  image: docker:stable-git
+  services:
+  - docker:stable-dind
   script:
-    - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - echo "Building Dockerfile-based application..."
+      docker build \
+        --build-arg HTTP_PROXY="$HTTP_PROXY" \
+        --build-arg http_proxy="$http_proxy" \
+        --build-arg HTTPS_PROXY="$HTTPS_PROXY" \
+        --build-arg https_proxy="$https_proxy" \
+        --build-arg FTP_PROXY="$FTP_PROXY" \
+        --build-arg ftp_proxy="$ftp_proxy" \
+        --build-arg NO_PROXY="$NO_PROXY" \
+        --build-arg no_proxy="$no_proxy" \
+        -t "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" .
+  only:
+    - branches
 
 build:
   stage: build
