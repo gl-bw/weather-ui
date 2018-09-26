@@ -13,8 +13,6 @@ build:
   services:
   - docker:stable-dind
   script:
-    - npm install
-    - npm run build
     - setup_docker
     - build
   artifacts:
