@@ -109,5 +109,5 @@ test:
   }
 
 before_script:
-  - *auto_devops
+  - *ado
 
