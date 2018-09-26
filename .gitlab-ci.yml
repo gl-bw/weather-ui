@@ -1,4 +1,24 @@
-image: mhart/alpine-node
+services:
+  - docker:dind
+  
+stages:
+  - container
+  - build
+  - test
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+build_container:
+  stage: container
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
 
 build:
   stage: build
