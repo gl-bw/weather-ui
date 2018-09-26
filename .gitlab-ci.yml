@@ -1,6 +1,3 @@
-services:
-  - docker:dind
-  
 stages:
   - container
   - build
@@ -15,6 +12,9 @@ before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
 build_container:
+  image: docker:stable
+  services:
+    - docker:dind
   stage: container
   script:
     - docker build -t $IMAGE_TAG .
