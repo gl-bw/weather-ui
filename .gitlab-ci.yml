@@ -8,7 +8,7 @@ variables:
 
   
 build:
-  stage: container
+  stage: build
   image: docker:stable-git
   services:
   - docker:stable-dind
