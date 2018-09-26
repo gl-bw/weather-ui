@@ -2,8 +2,8 @@ image: alpine:latest
 
 stages:
   - build
-  - container
   - test
+  - container
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -22,6 +22,15 @@ build:
       - build
       - node_modules
 
+test:
+  stage: test
+  image: mhart/alpine-node
+  script:
+    - npm test
+  artifacts:
+    paths:
+      - coverage/coverage-final.json
+
 container:
   stage: container
   image: docker:stable-git
@@ -30,16 +39,6 @@ container:
   script:
     - setup_docker
     - build
-
-test:
-  stage: test
-  image: mhart/alpine-node
-  script:
-    - npm install
-    - npm test
-  artifacts:
-    paths:
-      - coverage/coverage-final.json
 
 .ado: &ado |
   # Auto DevOps variables and functions
@@ -81,27 +80,7 @@ test:
         --build-arg no_proxy="$no_proxy" \
         -t "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" .
     else
-      echo "Building Heroku-based application using gliderlabs/herokuish docker image..."
-      docker run -i \
-        -e BUILDPACK_URL \
-        -e HTTP_PROXY \
-        -e http_proxy \
-        -e HTTPS_PROXY \
-        -e https_proxy \
-        -e FTP_PROXY \
-        -e ftp_proxy \
-        -e NO_PROXY \
-        -e no_proxy \
-        --name="$CI_CONTAINER_NAME" -v "$(pwd):/tmp/app:ro" gliderlabs/herokuish /bin/herokuish buildpack build
-      docker commit "$CI_CONTAINER_NAME" "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG"
-      docker rm "$CI_CONTAINER_NAME" >/dev/null
-      echo ""
-
-      echo "Configuring $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG docker image..."
-      docker create --expose 5000 --env PORT=5000 --name="$CI_CONTAINER_NAME" "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" /bin/herokuish procfile start web
-      docker commit "$CI_CONTAINER_NAME" "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG"
-      docker rm "$CI_CONTAINER_NAME" >/dev/null
-      echo ""
+      echo "No Dockerfile"
     fi
 
     echo "Pushing to GitLab Container Registry..."
