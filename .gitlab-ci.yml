@@ -13,7 +13,7 @@ variables:
 
 build:
   stage: build
-  image: alpine:node
+  image: mhart/alpine-node
   script:
     - npm install
     - npm run build
