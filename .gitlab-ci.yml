@@ -1,10 +1,5 @@
 image: alpine:latest
 
-stages:
-  - container
-  - build
-  - test
-
 variables:
   DOCKER_DRIVER: overlay2
 
@@ -12,24 +7,19 @@ variables:
   HELM_VERSION: 2.10.0
 
   
-build_container:
+build:
   stage: container
   image: docker:stable-git
   services:
   - docker:stable-dind
   script:
+    - npm install
+    - npm run build
     - setup_docker
     - build
-
-build:
-  stage: build
-  script:
-    - apk add --no-cache git
-    - npm install
   artifacts:
     paths:
-      - public
-    expire_in: 1 day
+      - build
 
 test:
   stage: test
