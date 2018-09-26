@@ -16,11 +16,11 @@ npm start
 After build, you can run this locally in a container.
 
 
-# Pull the built image down
+### Pull the built image down
 docker pull registry.i2p.online/microservices/ui/master:ui
 
-# Run the image in a container, forward port 80 to 8080 on local machine
+### Run the image in a container, forward port 80 to 8080 on local machine
 docker run --rm -it -p 8080:80 registry.i2p.online/microservices/ui/master:ui
 
-#Visit site
+### Visit site
 localhost:8080
