@@ -1,18 +1,17 @@
 image: alpine:latest
 
 stages:
-  - build
+  - build app
   - test
-  - container
+  - build image
 
 variables:
   DOCKER_DRIVER: overlay2
+  DOCKER_HOST: tcp://localhost:2375
 
-  KUBERNETES_VERSION: 1.8.6
-  HELM_VERSION: 2.10.0
 
 build:
-  stage: build
+  stage: build app
   image: mhart/alpine-node
   script:
     - npm install
@@ -31,63 +30,12 @@ test:
     paths:
       - coverage/coverage-final.json
 
-container:
-  stage: container
-  image: docker:stable-git
+build_image:
+  stage: build image
+  image: docker:latest
   services:
-  - docker:stable-dind
+    - docker:dind
   script:
-    - setup_docker
-    - build
-
-.ado: &ado |
-  # Auto DevOps variables and functions
-  [[ "$TRACE" ]] && set -x
-  export CI_APPLICATION_REPOSITORY=$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
-  export CI_APPLICATION_TAG=ui
-  export CI_CONTAINER_NAME=ci_job_build_${CI_JOB_ID}
-  export TILLER_NAMESPACE=$KUBE_NAMESPACE
-
-  function setup_docker() {
-    if ! docker info &>/dev/null; then
-      if [ -z "$DOCKER_HOST" -a "$KUBERNETES_PORT" ]; then
-        export DOCKER_HOST='tcp://localhost:2375'
-      fi
-    fi
-  }
-
-  function registry_login() {
-    if [[ -n "$CI_REGISTRY_USER" ]]; then
-      echo "Logging to GitLab Container Registry with CI credentials..."
-      docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-      echo ""
-    fi
-  }
-
-  function build() {
-    registry_login
-
-    if [[ -f Dockerfile ]]; then
-      echo "Building Dockerfile-based application..."
-      docker build \
-        --build-arg HTTP_PROXY="$HTTP_PROXY" \
-        --build-arg http_proxy="$http_proxy" \
-        --build-arg HTTPS_PROXY="$HTTPS_PROXY" \
-        --build-arg https_proxy="$https_proxy" \
-        --build-arg FTP_PROXY="$FTP_PROXY" \
-        --build-arg ftp_proxy="$ftp_proxy" \
-        --build-arg NO_PROXY="$NO_PROXY" \
-        --build-arg no_proxy="$no_proxy" \
-        -t "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" .
-    else
-      echo "No Dockerfile"
-    fi
-
-    echo "Pushing to GitLab Container Registry..."
-    docker push "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG"
-    echo ""
-  }
-
-before_script:
-  - *ado
-
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE/ui:latest
+    - docker push $CI_REGISTRY_IMAGE/ui:latest
