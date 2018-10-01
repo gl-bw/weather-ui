@@ -37,5 +37,5 @@ build_image:
     - docker:dind
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE/ui:latest
+    - docker build -t $CI_REGISTRY_IMAGE/ui:latest .
     - docker push $CI_REGISTRY_IMAGE/ui:latest
