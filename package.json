@@ -1,13 +1,13 @@
 {
   "name": "gl-microservices-ui-demo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.2.2",
     "ajv": "^6.5.4",
     "react": "16.5.2",
     "react-dom": "16.5.2",
-    "react-scripts": "2.0.4"
+    "react-scripts": "^2.0.4"
   },
   "devDependencies": {},
   "scripts": {
