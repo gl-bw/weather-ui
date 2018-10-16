@@ -9,7 +9,8 @@ class App extends Component {
   state = {
     loading: false,
     input: "Type something...",
-    result: ""
+    result: "",
+    pretext: ""
   };
 
   handleChange = e => {
@@ -28,7 +29,8 @@ class App extends Component {
 
     this.setState({
       result: result,
-      loading: false
+      loading: false,
+      pretext: "Results:"
     });
   };
 
@@ -47,12 +49,13 @@ class App extends Component {
               onChange={this.handleChange}
             />
             <Button variant="contained" color="primary" onClick={this.handleClick} disabled={this.state.loading}>
-              {this.state.loading ? "Loading..." : "Call API"}
+              {this.state.loading ? "Reversing word..." : "Call API"}
             </Button>
         </div>
         <div className="App-footer">
         <h1 className="app-intro">
-         {this.state.result}
+         <span className="intro">{this.state.pretext}</span>
+         <span className="results">{this.state.result}</span>
         </h1>
       </div>
     </div>
