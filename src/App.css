@@ -14,10 +14,17 @@
   color: white;
 }
 
+.App-body {
+  margin-top:30px;
+}
+
+.stateInput {
+  margin-right:10px;
+}
+
 .app-intro {
   font-size: 22px;
   padding:50px;
-  background:#eee;
 }
 
 button {
