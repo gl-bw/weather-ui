@@ -9,3 +9,5 @@ This is the UI portion of the microservice application. It is a simple react SPA
 ## Start
 
 npm start
+
+## Build
