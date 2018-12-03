@@ -43,6 +43,10 @@ input {
   padding:5px 10px;
 }
 
+.errorText {
+  color:red;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
