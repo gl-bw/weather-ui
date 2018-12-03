@@ -9,7 +9,8 @@ class Weather extends Component {
         loading: false,
         input: "Enter Address",
         result: "",
-        pretext: ""
+        pretext: "",
+        errorText:""
     };
 
     handleChange = e => {
@@ -20,12 +21,15 @@ class Weather extends Component {
 
     handleClick = async e => {
         this.setState({
-            loading: true
+            loading: true,
+            result: "",
+            pretext: "",
+            errorText:""
         });
 
         // get the cords for this location from google maps.
         const response = await fetch("/api/geo/" + this.state.input);
-        let result = null;
+        //let result = null;
         try {
             const geo = await response.json();
             let lat = geo.lat;
@@ -55,15 +59,17 @@ class Weather extends Component {
         return (
             <div className="Weather">
         <div className="Weather-body">
+        <form>
             <Input
               type="text"
               className="stateInput"
               placeholder={this.state.input}
               onChange={this.handleChange}
             />
-            <Button variant="contained" color="primary" onClick={this.handleClick} disabled={this.state.loading}>
+            <Button variant="contained" type="submit" color="primary" onClick={this.handleClick} disabled={this.state.loading}>
               {this.state.loading ? "Getting Weather..." : "Get Weather"}
             </Button>
+        </form>
         </div>
         <div className="Weather-footer">
         <h1 className="app-intro">
