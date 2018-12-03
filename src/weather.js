@@ -34,9 +34,10 @@ class Weather extends Component {
     const result = await weather.json();
 
     this.setState({
-      result: result.currently.apparentTemperature,
+      
+      result: Math.round(result.currently.temperature) + '℉',
       loading: false,
-      pretext: "Results:"
+      pretext: "Temperature:",
     });
   };
 
