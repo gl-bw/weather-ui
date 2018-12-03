@@ -10,7 +10,7 @@ class Weather extends Component {
         input: "Enter Address",
         result: "",
         pretext: "",
-        errorText:""
+        errorText: ""
     };
 
     handleChange = e => {
@@ -24,7 +24,7 @@ class Weather extends Component {
             loading: true,
             result: "",
             pretext: "",
-            errorText:""
+            errorText: ""
         });
 
         // get the cords for this location from google maps.
