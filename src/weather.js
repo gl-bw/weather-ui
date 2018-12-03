@@ -29,7 +29,7 @@ class Weather extends Component {
     let lat = geo.lat;
     let lng = geo.lng;
 
-    // get the weather fron the cords returned from google maps.
+    // get the weather fron Dark Sky from the cords returned from google maps.
     const weather = await fetch("api/weather/" + lat + '/' + lng);
     const result = await weather.json();
 
