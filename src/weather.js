@@ -7,7 +7,7 @@ import Input from '@material-ui/core/Input';
 class Weather extends Component {
   state = {
     loading: false,
-    input: "Enter Latitude and Longitude",
+    input: "Enter Address",
     result: "",
     pretext: ""
   };
@@ -23,8 +23,15 @@ class Weather extends Component {
       loading: true
     });
 
-    const response = await fetch("/api/weather/" + this.state.input);
-    const result = await response.json();
+    // get the cords for this location from google maps.
+    const response = await fetch("/api/geo/" + this.state.input);
+    const geo = await response.json();
+    let lat = geo.lat;
+    let lng = geo.lng;
+
+    // get the weather fron the cords returned from google maps.
+    const weather = await fetch("api/weather/" + lat + '/' + lng);
+    const result = await weather.json();
 
     this.setState({
       result: result.currently.apparentTemperature,
